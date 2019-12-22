@@ -3,26 +3,30 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:vintage_flip_clock/clock_provider.dart';
 
 class WeatherSpinner extends StatefulWidget {
-  const WeatherSpinner(this._weatherConditionNotifier);
-
-  final ValueNotifier<WeatherCondition> _weatherConditionNotifier;
 
   @override
   _WeatherSpinnerState createState() => _WeatherSpinnerState();
 }
 
 class _WeatherSpinnerState extends State<WeatherSpinner> {
+  ValueNotifier<WeatherCondition> _weatherConditionNotifier;
   ScrollController _scrollController;
   WeatherCondition _currentWeatherCondition;
   double _iconSize;
+  final _numVisibleIcons = 7;
 
   @override
   void initState() {
     super.initState();
-    _currentWeatherCondition = widget._weatherConditionNotifier.value;
-    widget._weatherConditionNotifier.addListener(this._scrollToIcon);
+    _weatherConditionNotifier = (context
+        .getElementForInheritedWidgetOfExactType<ClockProvider>()
+        ?.widget as ClockProvider)
+        .weatherConditionNotifier;
+    _weatherConditionNotifier.addListener(_scrollToIcon);
+    _currentWeatherCondition = _weatherConditionNotifier.value;
     WidgetsBinding.instance.addPostFrameCallback((_) => {
           _scrollController = ScrollController(
               initialScrollOffset:
@@ -30,13 +34,19 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
         });
   }
 
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   void _scrollToIcon() {
     final offset =
-        this._calculateScrollOffset(widget._weatherConditionNotifier.value);
+        this._calculateScrollOffset(_weatherConditionNotifier.value);
     _scrollController.animateTo(offset,
-        duration: const Duration(seconds: 3), curve: Curves.easeInOut);
+        duration: const Duration(seconds: 3), curve: Curves.easeInOutBack);
 
-    _currentWeatherCondition = widget._weatherConditionNotifier.value;
+    _currentWeatherCondition = _weatherConditionNotifier.value;
   }
 
   double _calculateScrollOffset(WeatherCondition newWeatherCondition) {
@@ -54,42 +64,52 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
 
   double _getScrollOffsetOfWeatherCondition(WeatherCondition weatherCondition) {
     final index = _getIndexOfWeatherCondition(weatherCondition);
-    return (index - 1) * _iconSize;
+    return (index - (_numVisibleIcons - 1) / 2) * _iconSize;
   }
 
   final _icons = [
-    Icons.toys,
-    Icons.cloud_queue,
-    Icons.dehaze,
-    Icons.opacity,
+    Icons.brightness_4,
+    Icons.pool,
+    Icons.looks,
+    Icons.brightness_6,
+    Icons.cloud_queue, // cloudy
     Icons.grain,
-    Icons.wb_sunny,
-    Icons.flash_on,
-    Icons.toys,
-    Icons.cloud_queue
+    Icons.dehaze, // foggy
+    Icons.opacity, // rainy
+    Icons.bubble_chart,
+    Icons.ac_unit, // snowy
+    Icons.whatshot,
+    Icons.wb_sunny, // sunny
+    Icons.cloud_off,
+    Icons.flash_on, // thunderstorm
+    Icons.toys, // windy
+    Icons.brightness_3,
+    Icons.scatter_plot,
+    Icons.beach_access,
+    Icons.wb_cloudy
   ];
 
   int _getIndexOfWeatherCondition(WeatherCondition weatherCondition) {
     switch (weatherCondition) {
       case WeatherCondition.cloudy:
-        return 1;
-      case WeatherCondition.foggy:
-        return 2;
-        break;
-      case WeatherCondition.rainy:
-        return 3;
-        break;
-      case WeatherCondition.snowy:
         return 4;
-        break;
-      case WeatherCondition.sunny:
-        return 5;
-        break;
-      case WeatherCondition.thunderstorm:
+      case WeatherCondition.foggy:
         return 6;
         break;
-      case WeatherCondition.windy:
+      case WeatherCondition.rainy:
         return 7;
+        break;
+      case WeatherCondition.snowy:
+        return 9;
+        break;
+      case WeatherCondition.sunny:
+        return 11;
+        break;
+      case WeatherCondition.thunderstorm:
+        return 13;
+        break;
+      case WeatherCondition.windy:
+        return 14;
         break;
     }
     return -1;
@@ -97,80 +117,44 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Container(
-          height: constraints.biggest.height * 0.4,
-          child: AspectRatio(
-            aspectRatio: 1 / 2,
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.transparent,
-                boxShadow: [
-                  const BoxShadow(
-                    color: Colors.black,
-                    offset: const Offset(0.0, 0.0),
-                  ),
-                  const BoxShadow(
-                    color: Color(0xFF202020),
-                    offset: const Offset(0.0, 0.0),
-                    spreadRadius: -2.5,
-                    blurRadius: 2.5,
-                  ),
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Stack(
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(left: 5.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black,
-                          )
-                        ),
-                        child: LayoutBuilder(
-                          builder:
-                              (BuildContext context, BoxConstraints constraints) {
-                            _iconSize = constraints.biggest.height / 3.0;
-                            return ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              controller: _scrollController,
-                              itemCount: _icons.length,
-                              itemExtent: _iconSize,
-                              itemBuilder: (BuildContext context, int index) {
-                                return buildIconContainer(_icons[index], _iconSize);
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: CustomPaint(
-                          size: Size.square(10.0),
-                          painter: Triangle(Colors.red),
-                        ),
-                      ),
-                    ),
-                    buildOverlay(),
-                  ],
-                ),
+    return Stack(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5.0),
+              border: Border.all(
+                color: Colors.black,
               ),
             ),
+            child: LayoutBuilder(
+              builder:
+                  (BuildContext context, BoxConstraints constraints) {
+                _iconSize = constraints.biggest.height / _numVisibleIcons;
+                return ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  controller: _scrollController,
+                  itemCount: _icons.length,
+                  itemExtent: _iconSize,
+                  itemBuilder: (BuildContext context, int index) {
+                    return buildIconContainer(_icons[index], _iconSize);
+                  },
+                );
+              },
+            ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget buildOverlay() {
-    return Container(
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Container(
+            child: CustomPaint(
+              size: Size.square(10.0),
+              painter: Triangle(Colors.red),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -186,8 +170,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
               children: <Widget>[
                 for (var j = 0; j < 5; j++)
                   LayoutBuilder(
-                    builder: (BuildContext context,
-                        BoxConstraints constrains) {
+                    builder: (BuildContext context, BoxConstraints constrains) {
                       return Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -231,8 +214,8 @@ class Triangle extends CustomPainter {
 
   Triangle(Color color) {
     _paint = Paint()
-        ..color = color
-        ..style = PaintingStyle.fill;
+      ..color = color
+      ..style = PaintingStyle.fill;
   }
 
   @override
@@ -249,5 +232,4 @@ class Triangle extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) {
     return false;
   }
-
 }

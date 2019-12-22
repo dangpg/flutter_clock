@@ -1,17 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vintage_flip_clock/enums.dart';
 import 'dart:math';
 
-import 'clock_cards.dart';
-
-enum CardPosition { top, bottom }
-enum AnimationDirection { visibleToHide, hideToVisible, none }
-
 class FlipCard extends StatefulWidget {
-  const FlipCard(this._valueNotifier, this._mode);
+  const FlipCard(this._valueNotifier, this._modulo);
 
   final ValueNotifier<String> _valueNotifier;
-  final Mode _mode;
+  final num _modulo;
 
   @override
   _FlipCardState createState() => _FlipCardState();
@@ -21,7 +17,7 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   ValueNotifier<String> _currValueNotifier;
   ValueNotifier<String> _nextValueNotifier;
 
-  final _dividerHeight = 6.0;
+  final _dividerHeight = 2.0;
   final _dividerColor = Color(0xFF202020);
   final _cardColor = Colors.black;
 
@@ -33,9 +29,8 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _currValueNotifier = ValueNotifier<String>(widget._valueNotifier.value);
-    _nextValueNotifier =
-        ValueNotifier<String>(_getNextValue(widget._valueNotifier.value));
+    _currValueNotifier = ValueNotifier<String>(_getValue());
+    _nextValueNotifier = ValueNotifier<String>(_getNextValue());
 
     _upperCardAnimationController = AnimationController(
       vsync: this,
@@ -73,6 +68,20 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
     widget._valueNotifier.addListener(_animateTransition);
   }
 
+  @override
+  void dispose() {
+    widget._valueNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(FlipCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget._modulo != widget._modulo) {
+      _updateValues();
+    }
+  }
+
   void _animateTransition() {
     _upperCardAnimationController.forward();
   }
@@ -80,17 +89,26 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   void _updateValues() {
     _upperCardAnimationController.reset();
     _lowerCardAnimationController.reset();
-    _currValueNotifier.value = widget._valueNotifier.value;
-    _nextValueNotifier.value = _getNextValue(widget._valueNotifier.value);
+    _currValueNotifier.value = _getValue();
+    _nextValueNotifier.value = _getNextValue();
   }
 
-  String _getNextValue(String value) {
-    final numValue = num.parse(value);
-    if (widget._mode == Mode.hour) {
-      return ((numValue + 1) % 24).toString().padLeft(2, '0');
-    } else {
-      return ((numValue + 1) % 60).toString().padLeft(2, '0');
-    }
+  String _getValue() {
+    return _handleSpecialCase(
+            num.parse(widget._valueNotifier.value) % widget._modulo)
+        .toString()
+        .padLeft(2, '0');
+  }
+
+  String _getNextValue() {
+    return _handleSpecialCase(
+            (num.parse(widget._valueNotifier.value) + 1) % widget._modulo)
+        .toString()
+        .padLeft(2, '0');
+  }
+
+  num _handleSpecialCase(num value) {
+    return (value == 0 && widget._modulo == 12) ? 12 : value;
   }
 
   @override
@@ -171,7 +189,6 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
       AnimationDirection animationDirection = AnimationDirection.none}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black,
         border: cardPosition == CardPosition.top
             ? Border(
                 bottom: BorderSide(
@@ -194,7 +211,18 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
           heightFactor: 0.5,
           child: SizedBox.expand(
             child: Container(
-              color: _cardColor,
+              decoration: BoxDecoration(
+                borderRadius: cardPosition == CardPosition.top
+                    ? BorderRadius.only(
+                        topLeft: Radius.circular(5.0),
+                        topRight: Radius.circular(5.0),
+                      )
+                    : BorderRadius.only(
+                        bottomLeft: Radius.circular(5.0),
+                        bottomRight: Radius.circular(5.0),
+                      ),
+                color: _cardColor,
+              ),
               child: FittedBox(
                 fit: BoxFit.fitHeight,
                 child: ValueListenableBuilder(

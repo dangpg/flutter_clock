@@ -1,104 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'flip_card.dart';
-
-enum Mode { hour, minute }
+import 'package:vintage_flip_clock/clock_provider.dart';
+import 'package:vintage_flip_clock/enums.dart';
+import 'package:vintage_flip_clock/flip_card.dart';
 
 class ClockCards extends StatefulWidget {
-  const ClockCards(this._dateTimeNotifier, this._is24HourFormat);
-
-  final ValueNotifier<DateTime> _dateTimeNotifier;
-  final bool _is24HourFormat;
-
   @override
   _ClockCardsState createState() => _ClockCardsState();
 }
 
 class _ClockCardsState extends State<ClockCards> {
+  ValueNotifier<DateTime> _dateTimeNotifier;
   ValueNotifier<String> _hourNotifier;
   ValueNotifier<String> _minuteNotifier;
+  ValueNotifier<bool> _is24HourFormatNotifier;
 
   @override
   void initState() {
     super.initState();
-    _hourNotifier = ValueNotifier<String>(_getHours(widget._dateTimeNotifier.value));
-    _minuteNotifier = ValueNotifier<String>(_getMinutes(widget._dateTimeNotifier.value));
-    widget._dateTimeNotifier.addListener(_updateTime);
+    _dateTimeNotifier = (context
+            .getElementForInheritedWidgetOfExactType<ClockProvider>()
+            ?.widget as ClockProvider)
+        .dateTimeNotifier;
+    _dateTimeNotifier.addListener(_updateTime);
+
+    _is24HourFormatNotifier = (context
+            .getElementForInheritedWidgetOfExactType<ClockProvider>()
+            ?.widget as ClockProvider)
+        .is24HourFormatNotifier;
+
+    _hourNotifier = ValueNotifier<String>(_getHours());
+    _minuteNotifier = ValueNotifier<String>(_getMinutes());
   }
 
-  String _getHours(DateTime dateTime) {
-    return DateFormat(widget._is24HourFormat ? 'HH' : 'hh').format(dateTime);
+  String _getHours() {
+    return DateFormat('HH').format(_dateTimeNotifier.value);
   }
 
-  String _getMinutes(DateTime dateTime) {
-    return DateFormat('mm').format(dateTime);
+  String _getMinutes() {
+    return DateFormat('mm').format(_dateTimeNotifier.value);
   }
 
   void _updateTime() {
-    if (_hourNotifier.value != _getHours(widget._dateTimeNotifier.value)) {
-      _updateHour();
+    if (_hourNotifier.value != _getHours()) {
+      _hourNotifier.value = _getHours();
     }
-    if (_minuteNotifier.value != _getMinutes(widget._dateTimeNotifier.value)) {
-      _updateMinute();
+    if (_minuteNotifier.value != _getMinutes()) {
+      _minuteNotifier.value = _getMinutes();
     }
-  }
-
-  void _updateHour() {
-    _hourNotifier.value = _getHours(widget._dateTimeNotifier.value);
-  }
-
-  void _updateMinute() {
-    _minuteNotifier.value = _getMinutes(widget._dateTimeNotifier.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        return Container(
-          height: constraints.biggest.height * 0.9,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-              width: 2.5,
-            ),
-            borderRadius: BorderRadius.circular(10.0),
+    return Row(
+      children: <Widget>[
+        Spacer(),
+        Expanded(
+          flex: 20,
+          child: ValueListenableBuilder(
+            valueListenable: _is24HourFormatNotifier,
+            builder: (BuildContext context, bool is24HourFormat,
+                Widget child) {
+              return FlipCard(_hourNotifier, is24HourFormat ? 24 : 12);
+            },
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              boxShadow: [
-                const BoxShadow(
-                  color: Colors.black,
-                  offset: const Offset(0.0, 0.0),
-                ),
-                const BoxShadow(
-                  color: Color(0xFF202020),
-                  offset: const Offset(0.0, 0.0),
-                  spreadRadius: -2.5,
-                  blurRadius: 5.0,
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 10,
-                    child: FlipCard(_hourNotifier, Mode.hour),
-                  ),
-                  Spacer(),
-                  Expanded(
-                    flex: 10,
-                    child: FlipCard(_minuteNotifier, Mode.minute),
-                  )
-                ],
-              ),
-            ),
-          ),
-        );
-      }
+        ),
+        Spacer(),
+        Expanded(
+          flex: 20,
+          child: FlipCard(_minuteNotifier, 60),
+        ),
+        Spacer(),
+      ],
     );
   }
 }
