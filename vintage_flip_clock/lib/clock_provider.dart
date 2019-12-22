@@ -8,6 +8,7 @@ class ClockProvider extends InheritedWidget {
   final ValueNotifier<HourMode> hourModeNotifier;
   final ValueNotifier<num> temperatureNotifier;
   final ValueNotifier<WeatherCondition> weatherConditionNotifier;
+  final ValueNotifier<Weekday> weekdayNotifier;
 
   ClockProvider({
     Key key,
@@ -16,12 +17,14 @@ class ClockProvider extends InheritedWidget {
     @required this.hourModeNotifier,
     @required this.temperatureNotifier,
     @required this.weatherConditionNotifier,
+    @required this.weekdayNotifier,
     @required Widget child,
   })  : assert(dateTimeNotifier != null),
         assert(is24HourFormatNotifier != null),
         assert(hourModeNotifier != null),
         assert(temperatureNotifier != null),
         assert(weatherConditionNotifier != null),
+        assert(weekdayNotifier != null),
         super(key: key, child: child);
 
   @override
@@ -32,7 +35,8 @@ class ClockProvider extends InheritedWidget {
         hourModeNotifier.value != oldWidget.hourModeNotifier.value ||
         temperatureNotifier.value != oldWidget.temperatureNotifier.value ||
         weatherConditionNotifier.value !=
-            oldWidget.weatherConditionNotifier.value;
+            oldWidget.weatherConditionNotifier.value ||
+        weekdayNotifier.value != oldWidget.weekdayNotifier.value;
   }
 
   static ClockProvider of(BuildContext context) {

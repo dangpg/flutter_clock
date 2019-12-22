@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:vintage_flip_clock/am_pm_widget.dart';
 import 'package:vintage_flip_clock/clock_cards.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
-import 'package:vintage_flip_clock/day_spinner.dart';
+import 'package:vintage_flip_clock/weekday_spinner.dart';
 import 'package:vintage_flip_clock/enums.dart';
 import 'package:vintage_flip_clock/temp_scale.dart';
 import 'package:vintage_flip_clock/weather_spinner.dart';
@@ -34,6 +34,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   ValueNotifier<WeatherCondition> _weatherConditionNotifier;
   ValueNotifier<bool> _is24HourFormatNotifier;
   ValueNotifier<HourMode> _hourModeNotifier;
+  ValueNotifier<Weekday> _weekdayNotifier;
   Timer _timer;
 
   @override
@@ -44,13 +45,15 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       DeviceOrientation.landscapeLeft,
     ]);
     _temperatureNotifier = ValueNotifier<num>(widget.model.temperature);
-//    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
-    _dateTimeNotifier =
-        ValueNotifier<DateTime>(DateTime.parse("1969-07-20 23:57:00Z"));
+    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
+//    _dateTimeNotifier =
+//        ValueNotifier<DateTime>(DateTime.parse("2019-12-21 23:57:00Z"));
     _weatherConditionNotifier =
         ValueNotifier<WeatherCondition>(widget.model.weatherCondition);
     _is24HourFormatNotifier = ValueNotifier<bool>(widget.model.is24HourFormat);
+
     _hourModeNotifier = ValueNotifier<HourMode>(_getHourMode());
+    _weekdayNotifier = ValueNotifier<Weekday>(_getWeekDay());
 
     widget.model.addListener(_updateModel);
     _updateTime();
@@ -82,30 +85,36 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   }
 
   void _updateTime() {
-//    _dateTimeNotifier.value = DateTime.now();
-//    _timer = Timer(
-//      Duration(minutes: 1) -
-//          Duration(seconds: _dateTimeNotifier.value.second) -
-//          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
-//      _updateTime,
-//    );
-
-    // Debug timer
-    _dateTimeNotifier.value = _dateTimeNotifier.value.add(
-      Duration(minutes: 1),
-    );
+    _dateTimeNotifier.value = DateTime.now();
     _timer = Timer(
-      Duration(seconds: 3),
+      Duration(minutes: 1) -
+          Duration(seconds: _dateTimeNotifier.value.second) -
+          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
       _updateTime,
     );
+
+    // Debug timer
+//    _dateTimeNotifier.value = _dateTimeNotifier.value.add(
+//      Duration(minutes: 1),
+//    );
+//    _timer = Timer(
+//      Duration(seconds: 3),
+//      _updateTime,
+//    );
 
     if (!_is24HourFormatNotifier.value) {
       _hourModeNotifier.value = _getHourMode();
     }
+
+    _weekdayNotifier.value = _getWeekDay();
   }
 
   HourMode _getHourMode() {
     return (_dateTimeNotifier.value.hour > 12) ? HourMode.PM : HourMode.AM;
+  }
+
+  Weekday _getWeekDay() {
+    return Weekday.values[_dateTimeNotifier.value.weekday - 1];
   }
 
   @override
@@ -116,6 +125,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       hourModeNotifier: _hourModeNotifier,
       temperatureNotifier: _temperatureNotifier,
       weatherConditionNotifier: _weatherConditionNotifier,
+      weekdayNotifier: _weekdayNotifier,
       child: Container(
         color: Color(0xEE000000),
         padding: EdgeInsets.all(20.0),
@@ -133,17 +143,28 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                       child: Column(
                         children: <Widget>[
                           Expanded(
+                            flex: 5,
                             child: _buildTextModelAndLocation(),
                           ),
+                          Spacer(),
                           Expanded(
+                            flex: 5,
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: _buildModuleBorder(
-                                child: DaySpinner(),
+                                child: LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    return WeekdaySpinner(
+                                        constraints.biggest.height);
+                                  },
+                                ),
                               ),
                             ),
                           ),
+                          Spacer(),
                           Expanded(
+                            flex: 5,
                             child: Align(
                               alignment: Alignment.bottomRight,
                               child: ValueListenableBuilder(
@@ -228,7 +249,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
 
   Widget _buildTextModelAndLocation() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         children: <Widget>[
           Text(

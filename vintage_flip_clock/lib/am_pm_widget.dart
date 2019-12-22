@@ -4,6 +4,7 @@ import 'package:vintage_flip_clock/enums.dart';
 
 class AmPmWidget extends StatefulWidget {
   const AmPmWidget(this._iconSize);
+
   final double _iconSize;
 
   @override
@@ -56,8 +57,7 @@ class _AmPmWidgetState extends State<AmPmWidget> {
           fit: BoxFit.contain,
           child: Text(
             _enumToString(HourMode.values[index]),
-            style: TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
         );
       },

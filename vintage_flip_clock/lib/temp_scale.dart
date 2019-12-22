@@ -62,8 +62,7 @@ class _TempScaleState extends State<TempScale> {
                   for (var i = 0; i < celsiusTemps.length; i++)
                     Expanded(
                       child: Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
@@ -80,13 +79,12 @@ class _TempScaleState extends State<TempScale> {
                           ),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
                                   for (var j = 0; j < 5; j++)
                                     LayoutBuilder(
@@ -94,11 +92,8 @@ class _TempScaleState extends State<TempScale> {
                                           BoxConstraints constrains) {
                                         return Container(
                                           height: j == 2
-                                              ? constrains
-                                                  .biggest.height
-                                              : constrains.biggest
-                                                      .height *
-                                                  0.4,
+                                              ? constrains.biggest.height
+                                              : constrains.biggest.height * 0.4,
                                           width: 1.0,
                                           color: Colors.white,
                                         );
@@ -115,12 +110,11 @@ class _TempScaleState extends State<TempScale> {
               ),
               Positioned.fill(
                 child: LayoutBuilder(
-                  builder: (BuildContext context,
-                      BoxConstraints constraints) {
+                  builder: (BuildContext context, BoxConstraints constraints) {
                     return ValueListenableBuilder(
-                      valueListenable: ClockProvider.of(context).temperatureNotifier,
-                      builder: (BuildContext context, num value,
-                          Widget child) {
+                      valueListenable:
+                          ClockProvider.of(context).temperatureNotifier,
+                      builder: (BuildContext context, num value, Widget child) {
                         return AnimatedPadding(
                           padding: EdgeInsets.only(
                             left: constraints.biggest.width *

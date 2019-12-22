@@ -51,18 +51,20 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
   }
 
   void _scrollToIcon() {
-    final offset = this._calculateScrollOffset(_weatherConditionNotifier.value);
-    _scrollController.animateTo(offset,
-        duration: const Duration(seconds: 3), curve: Curves.easeInOutBack);
-
-    _currentWeatherCondition = _weatherConditionNotifier.value;
+    if (_scrollController.hasClients) {
+      final offset = _calculateScrollOffset();
+      _scrollController.animateTo(offset,
+          duration: const Duration(seconds: 3), curve: Curves.easeInOutBack);
+      _currentWeatherCondition = _weatherConditionNotifier.value;
+    }
   }
 
-  double _calculateScrollOffset(WeatherCondition newWeatherCondition) {
-    int currentIconIndex =
+  double _calculateScrollOffset() {
+    final currentIconIndex =
         this._getIndexOfWeatherCondition(_currentWeatherCondition);
-    int newIconIndex = this._getIndexOfWeatherCondition(newWeatherCondition);
-    int diffIndex = (currentIconIndex - newIconIndex).abs();
+    final newIconIndex =
+        this._getIndexOfWeatherCondition(_weatherConditionNotifier.value);
+    final diffIndex = (currentIconIndex - newIconIndex).abs();
 
     if (currentIconIndex > newIconIndex) {
       return _scrollController.offset - diffIndex * _iconSize;

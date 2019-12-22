@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
-import 'package:vintage_flip_clock/enums.dart';
 import 'package:vintage_flip_clock/flip_card.dart';
 
 class ClockCards extends StatefulWidget {
@@ -59,8 +58,7 @@ class _ClockCardsState extends State<ClockCards> {
           flex: 20,
           child: ValueListenableBuilder(
             valueListenable: _is24HourFormatNotifier,
-            builder: (BuildContext context, bool is24HourFormat,
-                Widget child) {
+            builder: (BuildContext context, bool is24HourFormat, Widget child) {
               return FlipCard(_hourNotifier, is24HourFormat ? 24 : 12);
             },
           ),
