@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/am_pm_widget.dart';
 import 'package:vintage_flip_clock/clock_cards.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
@@ -127,7 +128,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       weatherConditionNotifier: _weatherConditionNotifier,
       weekdayNotifier: _weekdayNotifier,
       child: Container(
-        color: Color(0xEE000000),
+        color: ClockTheme.of(context).backgroundColor,
         padding: EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,7 +145,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                         children: <Widget>[
                           Expanded(
                             flex: 5,
-                            child: _buildTextModelAndLocation(),
+                            child: _buildTextModelAndLocation(context),
                           ),
                           Spacer(),
                           Expanded(
@@ -152,6 +153,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                             child: Align(
                               alignment: Alignment.centerRight,
                               child: _buildModuleBorder(
+                                context: context,
                                 child: LayoutBuilder(
                                   builder: (BuildContext context,
                                       BoxConstraints constraints) {
@@ -182,6 +184,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                                               child: AspectRatio(
                                                 aspectRatio: 1 / 1,
                                                 child: _buildModuleBorder(
+                                                  context: context,
                                                   child: LayoutBuilder(
                                                     builder:
                                                         (BuildContext context,
@@ -209,6 +212,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                   Expanded(
                     flex: 24,
                     child: _buildModuleBorder(
+                      context: context,
                       child: ClockCards(),
                       innerColor: Colors.transparent,
                       innerPadding: const EdgeInsets.all(0.0),
@@ -220,6 +224,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                   Expanded(
                     flex: 3,
                     child: _buildModuleBorder(
+                      context: context,
                       innerColor: Colors.transparent,
                       innerPadding: const EdgeInsets.all(0.0),
                       child: LayoutBuilder(
@@ -237,6 +242,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
             Expanded(
               flex: 5,
               child: _buildModuleBorder(
+                context: context,
                 innerPadding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
                 child: TempScale(),
               ),
@@ -247,17 +253,14 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
     );
   }
 
-  Widget _buildTextModelAndLocation() {
+  Widget _buildTextModelAndLocation(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: Column(
         children: <Widget>[
           Text(
             'DASHTIME',
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
+            style: ClockTheme.of(context).textTheme.title,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
@@ -266,10 +269,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
               child: Text(
                 'Made in\n${widget.model.location}',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 10.0,
-                  color: Colors.white,
-                ),
+                style: ClockTheme.of(context).textTheme.subtitle,
               ),
             ),
           )
@@ -279,13 +279,17 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   }
 
   Widget _buildModuleBorder(
-      {@required Widget child,
-      Color innerColor = Colors.black,
+      {@required BuildContext context,
+      @required Widget child,
+      Color innerColor,
       EdgeInsetsGeometry innerPadding = const EdgeInsets.all(6.0)}) {
+    if (innerColor == null) {
+      innerColor = ClockTheme.of(context).cardColor;
+    }
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.black,
+          color: ClockTheme.of(context).dividerColor,
           width: 2.5,
         ),
         borderRadius: BorderRadius.circular(10.0),
@@ -294,12 +298,12 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
         decoration: BoxDecoration(
           color: Colors.transparent,
           boxShadow: [
-            const BoxShadow(
-              color: Colors.black,
+            BoxShadow(
+              color: ClockTheme.of(context).canvasColor,
               offset: const Offset(0.0, 0.0),
             ),
-            const BoxShadow(
-              color: Color(0xFF202020),
+            BoxShadow(
+              color: ClockTheme.of(context).highlightColor,
               offset: const Offset(0.0, 0.0),
               spreadRadius: -2.5,
               blurRadius: 5.0,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 import 'package:vintage_flip_clock/enums.dart';
 
@@ -66,7 +67,10 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
           fit: BoxFit.contain,
           child: Text(
             _enumToString(Weekday.values[index].toString()),
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: ClockTheme.of(context).accentColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
       },

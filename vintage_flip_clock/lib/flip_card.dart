@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/enums.dart';
 import 'dart:math';
 
@@ -18,7 +19,6 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   ValueNotifier<String> _nextValueNotifier;
 
   final _dividerHeight = 2.0;
-  final _dividerColor = Color(0xFF202020);
   final _cardColor = Colors.black;
 
   AnimationController _upperCardAnimationController;
@@ -69,12 +69,6 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   }
 
   @override
-  void dispose() {
-    widget._valueNotifier.dispose();
-    super.dispose();
-  }
-
-  @override
   void didUpdateWidget(FlipCard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget._modulo != widget._modulo) {
@@ -120,18 +114,22 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
         child: Stack(
           children: <Widget>[
             _buildFlipCardWrapper(
+                context: context,
                 valueListenable: _nextValueNotifier,
                 cardPosition: CardPosition.top,
                 animationDirection: AnimationDirection.none),
             _buildFlipCardWrapper(
+                context: context,
                 valueListenable: _currValueNotifier,
                 cardPosition: CardPosition.top,
                 animationDirection: AnimationDirection.visibleToHide),
             _buildFlipCardWrapper(
+                context: context,
                 valueListenable: _currValueNotifier,
                 cardPosition: CardPosition.bottom,
                 animationDirection: AnimationDirection.none),
             _buildFlipCardWrapper(
+                context: context,
                 valueListenable: _nextValueNotifier,
                 cardPosition: CardPosition.bottom,
                 animationDirection: AnimationDirection.hideToVisible),
@@ -142,10 +140,12 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   }
 
   Widget _buildFlipCardWrapper(
-      {ValueListenable<String> valueListenable,
+      {BuildContext context,
+      ValueListenable<String> valueListenable,
       CardPosition cardPosition,
       AnimationDirection animationDirection = AnimationDirection.none}) {
     final child = _buildFlipCard(
+        context: context,
         valueListenable: valueListenable,
         cardPosition: cardPosition,
         animationDirection: animationDirection);
@@ -184,7 +184,8 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   }
 
   Widget _buildFlipCard(
-      {ValueListenable<String> valueListenable,
+      {BuildContext context,
+      ValueListenable<String> valueListenable,
       CardPosition cardPosition,
       AnimationDirection animationDirection = AnimationDirection.none}) {
     return Container(
@@ -193,13 +194,13 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
             ? Border(
                 bottom: BorderSide(
                   width: _dividerHeight / 2.0,
-                  color: _dividerColor,
+                  color: ClockTheme.of(context).backgroundColor,
                 ),
               )
             : Border(
                 top: BorderSide(
                   width: _dividerHeight / 2.0,
-                  color: _dividerColor,
+                  color: ClockTheme.of(context).backgroundColor,
                 ),
               ),
       ),
@@ -221,7 +222,7 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
                         bottomLeft: Radius.circular(5.0),
                         bottomRight: Radius.circular(5.0),
                       ),
-                color: _cardColor,
+                color: ClockTheme.of(context).cardColor,
               ),
               child: FittedBox(
                 fit: BoxFit.fitHeight,
@@ -231,7 +232,7 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
                     return Text(
                       value,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: ClockTheme.of(context).accentColor,
                       ),
                     );
                   },

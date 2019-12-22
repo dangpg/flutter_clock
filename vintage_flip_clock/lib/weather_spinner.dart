@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clock_helper/model.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 
 class WeatherSpinner extends StatefulWidget {
@@ -36,12 +37,6 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
     _scrollController = ScrollController(
         initialScrollOffset:
             _getScrollOffsetOfWeatherCondition(_currentWeatherCondition));
-
-//    WidgetsBinding.instance.addPostFrameCallback((_) => {
-//          _scrollController = ScrollController(
-//              initialScrollOffset:
-//                  _getScrollOffsetOfWeatherCondition(_currentWeatherCondition))
-//        });
   }
 
   @override
@@ -136,7 +131,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
               border: Border.all(
-                color: Colors.black,
+                color: ClockTheme.of(context).cardColor,
               ),
             ),
             child: ListView.builder(
@@ -145,7 +140,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
               itemCount: _icons.length,
               itemExtent: _iconSize,
               itemBuilder: (BuildContext context, int index) {
-                return buildIconContainer(_icons[index], _iconSize);
+                return buildIconContainer(context, _icons[index], _iconSize);
               },
             ),
           ),
@@ -155,7 +150,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
           child: Container(
             child: CustomPaint(
               size: Size.square(10.0),
-              painter: Triangle(Colors.red),
+              painter: Triangle(ClockTheme.of(context).cursorColor),
             ),
           ),
         ),
@@ -163,9 +158,9 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
     );
   }
 
-  Widget buildIconContainer(IconData iconData, double size) {
+  Widget buildIconContainer(BuildContext context, IconData iconData, double size) {
     return Container(
-      color: Colors.black,
+      color: ClockTheme.of(context).cardColor,
       height: size,
       child: Row(
         children: <Widget>[
@@ -183,7 +178,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
                               ? constrains.biggest.width
                               : constrains.biggest.width * 0.5,
                           height: 1.0,
-                          color: Colors.white,
+                          color: ClockTheme.of(context).accentColor,
                         ),
                       );
                     },
@@ -199,7 +194,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
                   alignment: Alignment.center,
                   child: Icon(
                     iconData,
-                    color: Colors.white,
+                    color: ClockTheme.of(context).accentColor,
                     size: min(constraints.biggest.height,
                             constraints.biggest.width) *
                         0.75,

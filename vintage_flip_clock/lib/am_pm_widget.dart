@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 import 'package:vintage_flip_clock/enums.dart';
 
@@ -57,7 +58,10 @@ class _AmPmWidgetState extends State<AmPmWidget> {
           fit: BoxFit.contain,
           child: Text(
             _enumToString(HourMode.values[index]),
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              color: ClockTheme.of(context).accentColor,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         );
       },

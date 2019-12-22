@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 
 class TempScale extends StatefulWidget {
@@ -7,7 +8,6 @@ class TempScale extends StatefulWidget {
 }
 
 class _TempScaleState extends State<TempScale> {
-  final List<int> colorCodes = <int>[600, 500, 100];
   final List<String> celsiusTemps = <String>[
     '-30',
     '-20',
@@ -48,8 +48,14 @@ class _TempScaleState extends State<TempScale> {
         Spacer(),
         Column(
           children: <Widget>[
-            Text('°C', style: TextStyle(color: Colors.white)),
-            Text('°F', style: TextStyle(color: Colors.white))
+            Text(
+              '°C',
+              style: ClockTheme.of(context).textTheme.headline,
+            ),
+            Text(
+              '°F',
+              style: ClockTheme.of(context).textTheme.headline,
+            )
           ],
         ),
         Expanded(
@@ -67,15 +73,11 @@ class _TempScaleState extends State<TempScale> {
                         children: <Widget>[
                           Text(
                             this.celsiusTemps[i],
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: ClockTheme.of(context).textTheme.subhead,
                           ),
                           Text(
                             this.fahrenheitTemps[i],
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
+                            style: ClockTheme.of(context).textTheme.subhead,
                           ),
                           Expanded(
                             child: Padding(
@@ -95,7 +97,7 @@ class _TempScaleState extends State<TempScale> {
                                               ? constrains.biggest.height
                                               : constrains.biggest.height * 0.4,
                                           width: 1.0,
-                                          color: Colors.white,
+                                          color: ClockTheme.of(context).accentColor,
                                         );
                                       },
                                     )
@@ -125,7 +127,7 @@ class _TempScaleState extends State<TempScale> {
                           child: child,
                         );
                       },
-                      child: _buildSlider(),
+                      child: _buildSlider(context),
                     );
                   },
                 ),
@@ -137,7 +139,7 @@ class _TempScaleState extends State<TempScale> {
     );
   }
 
-  Widget _buildSlider() {
+  Widget _buildSlider(BuildContext context) {
     return Align(
       alignment: Alignment.bottomLeft,
       child: FractionallySizedBox(
@@ -149,7 +151,7 @@ class _TempScaleState extends State<TempScale> {
               topLeft: Radius.circular(2.5),
               topRight: Radius.circular(2.5),
             ),
-            color: Colors.red,
+            color: ClockTheme.of(context).cursorColor,
             boxShadow: [
               BoxShadow(
                 color: Colors.black,
