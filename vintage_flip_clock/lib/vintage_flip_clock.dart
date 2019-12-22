@@ -201,7 +201,12 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                     child: _buildModuleBorder(
                       innerColor: Colors.transparent,
                       innerPadding: const EdgeInsets.all(0.0),
-                      child: WeatherSpinner(),
+                      child: LayoutBuilder(
+                        builder:
+                            (BuildContext context, BoxConstraints constraints) {
+                          return WeatherSpinner(constraints.biggest.height);
+                        },
+                      ),
                     ),
                   ),
                 ],

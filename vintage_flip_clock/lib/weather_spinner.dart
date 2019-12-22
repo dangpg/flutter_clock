@@ -6,6 +6,9 @@ import 'package:flutter_clock_helper/model.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 
 class WeatherSpinner extends StatefulWidget {
+  const WeatherSpinner(this.spinnerHeight);
+
+  final double spinnerHeight;
 
   @override
   _WeatherSpinnerState createState() => _WeatherSpinnerState();
@@ -22,16 +25,23 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
   void initState() {
     super.initState();
     _weatherConditionNotifier = (context
-        .getElementForInheritedWidgetOfExactType<ClockProvider>()
-        ?.widget as ClockProvider)
+            .getElementForInheritedWidgetOfExactType<ClockProvider>()
+            ?.widget as ClockProvider)
         .weatherConditionNotifier;
     _weatherConditionNotifier.addListener(_scrollToIcon);
+
+    _iconSize = widget.spinnerHeight / _numVisibleIcons;
+
     _currentWeatherCondition = _weatherConditionNotifier.value;
-    WidgetsBinding.instance.addPostFrameCallback((_) => {
-          _scrollController = ScrollController(
-              initialScrollOffset:
-                  _getScrollOffsetOfWeatherCondition(_currentWeatherCondition))
-        });
+    _scrollController = ScrollController(
+        initialScrollOffset:
+            _getScrollOffsetOfWeatherCondition(_currentWeatherCondition));
+
+//    WidgetsBinding.instance.addPostFrameCallback((_) => {
+//          _scrollController = ScrollController(
+//              initialScrollOffset:
+//                  _getScrollOffsetOfWeatherCondition(_currentWeatherCondition))
+//        });
   }
 
   @override
@@ -41,8 +51,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
   }
 
   void _scrollToIcon() {
-    final offset =
-        this._calculateScrollOffset(_weatherConditionNotifier.value);
+    final offset = this._calculateScrollOffset(_weatherConditionNotifier.value);
     _scrollController.animateTo(offset,
         duration: const Duration(seconds: 3), curve: Curves.easeInOutBack);
 
@@ -128,19 +137,13 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
                 color: Colors.black,
               ),
             ),
-            child: LayoutBuilder(
-              builder:
-                  (BuildContext context, BoxConstraints constraints) {
-                _iconSize = constraints.biggest.height / _numVisibleIcons;
-                return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  controller: _scrollController,
-                  itemCount: _icons.length,
-                  itemExtent: _iconSize,
-                  itemBuilder: (BuildContext context, int index) {
-                    return buildIconContainer(_icons[index], _iconSize);
-                  },
-                );
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: _icons.length,
+              itemExtent: _iconSize,
+              itemBuilder: (BuildContext context, int index) {
+                return buildIconContainer(_icons[index], _iconSize);
               },
             ),
           ),
