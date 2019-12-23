@@ -60,10 +60,7 @@ class _AmPmWidgetState extends State<AmPmWidget> {
           fit: BoxFit.contain,
           child: Text(
             Util.enumToString(HourMode.values[index]),
-            style: TextStyle(
-              color: ClockTheme.of(context).accentColor,
-              fontWeight: FontWeight.bold,
-            ),
+            style: ClockTheme.of(context).textTheme.body2,
           ),
         );
       },

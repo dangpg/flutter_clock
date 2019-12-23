@@ -127,7 +127,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.only(left: 5.0),
+          padding: const EdgeInsets.only(left: 5.0),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5.0),
@@ -227,6 +227,7 @@ class Triangle extends CustomPainter {
     path.lineTo(0.0, size.height);
     path.lineTo(size.width, size.height / 2.0);
     path.close();
+    canvas.drawShadow(path, Colors.black, 2.0, false);
     canvas.drawPath(path, _paint);
   }
 

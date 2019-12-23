@@ -65,6 +65,12 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = [
+      ClockTheme.of(context).textTheme.display1.color,
+      ClockTheme.of(context).textTheme.display2.color,
+      ClockTheme.of(context).textTheme.display3.color,
+      ClockTheme.of(context).textTheme.display4.color,
+    ];
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       controller: _scrollController,
@@ -76,8 +82,8 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
           child: Text(
             Util.enumToString(Weekday.values[index].toString()),
             style: TextStyle(
-              color: ClockTheme.of(context).accentColor,
               fontWeight: FontWeight.bold,
+              color: colors[index % 4]
             ),
           ),
         );

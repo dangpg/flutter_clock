@@ -6,7 +6,10 @@ import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/enums.dart';
 
 class FlipCard extends StatefulWidget {
-  const FlipCard({@required this.valueNotifier, @required this.modulo, this.dividerHeight = 2.0});
+  const FlipCard(
+      {@required this.valueNotifier,
+      @required this.modulo,
+      this.dividerHeight = 2.0});
 
   final ValueNotifier<String> valueNotifier;
   final num modulo;
@@ -202,13 +205,13 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
             ? Border(
                 bottom: BorderSide(
                   width: widget.dividerHeight / 2.0,
-                  color: ClockTheme.of(context).backgroundColor,
+                  color: ClockTheme.of(context).highlightColor,
                 ),
               )
             : Border(
                 top: BorderSide(
                   width: widget.dividerHeight / 2.0,
-                  color: ClockTheme.of(context).backgroundColor,
+                  color: ClockTheme.of(context).highlightColor,
                 ),
               ),
       ),
@@ -237,11 +240,18 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
                 child: ValueListenableBuilder(
                   valueListenable: valueListenable,
                   builder: (BuildContext context, String value, Widget child) {
-                    return Text(
-                      value,
-                      style: TextStyle(
-                        color: ClockTheme.of(context).accentColor,
-                      ),
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: <Widget>[
+                        Text(
+                          value.substring(0, 1),
+                          style: widget.modulo == 60 ? ClockTheme.of(context).textTheme.display3 : ClockTheme.of(context).textTheme.display1,
+                        ),
+                        Text(
+                          value.substring(1, 2),
+                          style: widget.modulo == 60 ? ClockTheme.of(context).textTheme.display4 : ClockTheme.of(context).textTheme.display2,
+                        ),
+                      ],
                     );
                   },
                 ),

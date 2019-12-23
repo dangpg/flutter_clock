@@ -9,7 +9,7 @@ class ClockCards extends StatelessWidget {
       children: <Widget>[
         Spacer(),
         Expanded(
-          flex: 20,
+          flex: 30,
           child: ValueListenableBuilder(
             valueListenable: ClockProvider.of(context).is24HourFormatNotifier,
             builder: (BuildContext context, bool is24HourFormat, Widget child) {
@@ -22,7 +22,7 @@ class ClockCards extends StatelessWidget {
         ),
         Spacer(),
         Expanded(
-          flex: 20,
+          flex: 30,
           child: FlipCard(
             valueNotifier: ClockProvider.of(context).minuteNotifier,
             modulo: 60,

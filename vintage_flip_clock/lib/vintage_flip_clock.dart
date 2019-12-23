@@ -23,8 +23,8 @@ class VintageFlipClock extends StatefulWidget {
 }
 
 class _VintageFlipClockState extends State<VintageFlipClock> {
-  ValueNotifier<num> _temperatureNotifier;
   ValueNotifier<DateTime> _dateTimeNotifier;
+  ValueNotifier<num> _temperatureNotifier;
   ValueNotifier<WeatherCondition> _weatherConditionNotifier;
   ValueNotifier<bool> _is24HourFormatNotifier;
   ValueNotifier<HourMode> _hourModeNotifier;
@@ -40,10 +40,10 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
-    _temperatureNotifier = ValueNotifier<num>(widget.model.temperature);
-//    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
+    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
     _dateTimeNotifier =
         ValueNotifier<DateTime>(DateTime.parse("2019-12-22 23:55:00Z"));
+    _temperatureNotifier = ValueNotifier<num>(widget.model.temperature);
     _weatherConditionNotifier =
         ValueNotifier<WeatherCondition>(widget.model.weatherCondition);
     _is24HourFormatNotifier = ValueNotifier<bool>(widget.model.is24HourFormat);
@@ -136,7 +136,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       minuteNotifier: _minuteNotifier,
       child: Container(
         color: ClockTheme.of(context).backgroundColor,
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -227,9 +227,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                       innerPadding: const EdgeInsets.all(0.0),
                     ),
                   ),
-                  Spacer(
-                    flex: 1,
-                  ),
+                  Spacer(),
                   Expanded(
                     flex: 3,
                     child: _buildModuleBorder(
@@ -308,6 +306,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       ),
       child: Container(
         decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.0),
           color: Colors.transparent,
           boxShadow: [
             BoxShadow(
@@ -323,7 +322,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(6.0),
           child: Container(
             decoration: BoxDecoration(
               color: innerColor,

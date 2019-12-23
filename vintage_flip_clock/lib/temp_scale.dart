@@ -39,18 +39,20 @@ class TempScale extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Spacer(),
-        Column(
-          children: <Widget>[
-            Text(
-              '°C',
-              style: ClockTheme.of(context).textTheme.headline,
-            ),
-            Text(
-              '°F',
-              style: ClockTheme.of(context).textTheme.headline,
-            )
-          ],
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+          child: Column(
+            children: <Widget>[
+              Text(
+                '°C',
+                style: ClockTheme.of(context).textTheme.headline,
+              ),
+              Text(
+                '°F',
+                style: ClockTheme.of(context).textTheme.headline,
+              )
+            ],
+          ),
         ),
         Expanded(
           flex: 30,
