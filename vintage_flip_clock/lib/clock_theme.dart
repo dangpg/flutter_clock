@@ -22,8 +22,8 @@ class ClockTheme {
     // Ticks
     accentColor: Colors.grey[800],
     textTheme: TextTheme(
-      title: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 16.0),
-      subtitle: TextStyle(color: Colors.grey[800], fontSize: 10.0),
+      title: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+      subtitle: TextStyle(color: Colors.grey[800]),
       headline: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       subhead: TextStyle(color: Colors.grey[800]),
       body1: TextStyle(color: Color(0xFF0F9D58), fontWeight: FontWeight.bold), // Weekday Widget

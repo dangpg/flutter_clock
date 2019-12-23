@@ -136,7 +136,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       minuteNotifier: _minuteNotifier,
       child: Container(
         color: ClockTheme.of(context).backgroundColor,
-        padding: const EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(10.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -272,15 +272,12 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
             'DASHTIME',
             style: ClockTheme.of(context).textTheme.title,
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: FittedBox(
-              fit: BoxFit.fitWidth,
-              child: Text(
-                'Made in\n${widget.model.location}',
-                textAlign: TextAlign.center,
-                style: ClockTheme.of(context).textTheme.subtitle,
-              ),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              'Made in\n${widget.model.location}',
+              textAlign: TextAlign.center,
+              style: ClockTheme.of(context).textTheme.subtitle,
             ),
           )
         ],

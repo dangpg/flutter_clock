@@ -43,13 +43,28 @@ class TempScale extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 4.0),
           child: Column(
             children: <Widget>[
-              Text(
-                '°C',
-                style: ClockTheme.of(context).textTheme.headline,
+              Expanded(
+                flex: 1,
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(
+                    '°C',
+                    style: ClockTheme.of(context).textTheme.headline,
+                  ),
+                ),
               ),
-              Text(
-                '°F',
-                style: ClockTheme.of(context).textTheme.headline,
+              Expanded(
+                flex: 1,
+                child: FittedBox(
+                  fit: BoxFit.fitHeight,
+                  child: Text(
+                    '°F',
+                    style: ClockTheme.of(context).textTheme.headline,
+                  ),
+                ),
+              ),
+              Spacer(
+                flex: 3,
               )
             ],
           ),
@@ -67,15 +82,28 @@ class TempScale extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Text(
-                            this._celsiusTemps[i],
-                            style: ClockTheme.of(context).textTheme.subhead,
-                          ),
-                          Text(
-                            this._fahrenheitTemps[i],
-                            style: ClockTheme.of(context).textTheme.subhead,
+                          Expanded(
+                            flex: 1,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Text(
+                                this._celsiusTemps[i],
+                                style: ClockTheme.of(context).textTheme.subhead,
+                              ),
+                            ),
                           ),
                           Expanded(
+                            flex: 1,
+                            child: FittedBox(
+                              fit: BoxFit.fitHeight,
+                              child: Text(
+                                this._fahrenheitTemps[i],
+                                style: ClockTheme.of(context).textTheme.subhead,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
                             child: Padding(
                               padding:
                               const EdgeInsets.symmetric(vertical: 8.0),
