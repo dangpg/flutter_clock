@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 import 'package:vintage_flip_clock/enums.dart';
+import 'package:vintage_flip_clock/util.dart';
 
 class WeekdaySpinner extends StatefulWidget {
-  const WeekdaySpinner(this._itemSize);
+  const WeekdaySpinner({@required this.itemSize});
 
-  final double _itemSize;
+  final double itemSize;
 
   @override
   _WeekdaySpinnerState createState() => _WeekdaySpinnerState();
@@ -30,8 +31,15 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
         ScrollController(initialScrollOffset: _getScrollOffsetOfWeekday());
   }
 
+  @override
+  void dispose() {
+    _weekdayNotifier.removeListener(_scrollToWeekday);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   double _getScrollOffsetOfWeekday() {
-    return Weekday.values.indexOf(_weekdayNotifier.value) * widget._itemSize;
+    return Weekday.values.indexOf(_weekdayNotifier.value) * widget.itemSize;
   }
 
   double _calculateScrollOffset() {
@@ -40,9 +48,9 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
     final diffIndex = (currentWeekdayIndex - newWeekdayIndex).abs();
 
     if (currentWeekdayIndex > newWeekdayIndex) {
-      return _scrollController.offset - diffIndex * widget._itemSize;
+      return _scrollController.offset - diffIndex * widget.itemSize;
     } else {
-      return _scrollController.offset + diffIndex * widget._itemSize;
+      return _scrollController.offset + diffIndex * widget.itemSize;
     }
   }
 
@@ -61,12 +69,12 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
       physics: const NeverScrollableScrollPhysics(),
       controller: _scrollController,
       itemCount: Weekday.values.length,
-      itemExtent: widget._itemSize,
+      itemExtent: widget.itemSize,
       itemBuilder: (BuildContext context, int index) {
         return FittedBox(
           fit: BoxFit.contain,
           child: Text(
-            _enumToString(Weekday.values[index].toString()),
+            Util.enumToString(Weekday.values[index].toString()),
             style: TextStyle(
               color: ClockTheme.of(context).accentColor,
               fontWeight: FontWeight.bold,
@@ -76,6 +84,4 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
       },
     );
   }
-
-  String _enumToString(Object e) => e.toString().split('.').last;
 }

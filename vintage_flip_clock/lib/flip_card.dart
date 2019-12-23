@@ -1,14 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/enums.dart';
-import 'dart:math';
 
 class FlipCard extends StatefulWidget {
-  const FlipCard(this._valueNotifier, this._modulo);
+  const FlipCard({@required this.valueNotifier, @required this.modulo, this.dividerHeight = 2.0});
 
-  final ValueNotifier<String> _valueNotifier;
-  final num _modulo;
+  final ValueNotifier<String> valueNotifier;
+  final num modulo;
+  final double dividerHeight;
 
   @override
   _FlipCardState createState() => _FlipCardState();
@@ -17,9 +19,6 @@ class FlipCard extends StatefulWidget {
 class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
   ValueNotifier<String> _currValueNotifier;
   ValueNotifier<String> _nextValueNotifier;
-
-  final _dividerHeight = 2.0;
-  final _cardColor = Colors.black;
 
   AnimationController _upperCardAnimationController;
   Animation<double> _upperCardAnimation;
@@ -65,13 +64,21 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
         },
       );
 
-    widget._valueNotifier.addListener(_animateTransition);
+    widget.valueNotifier.addListener(_animateTransition);
+  }
+
+  @override
+  void dispose() {
+    widget.valueNotifier.removeListener(_animateTransition);
+    super.dispose();
   }
 
   @override
   void didUpdateWidget(FlipCard oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget._modulo != widget._modulo) {
+    if (oldWidget.modulo != widget.modulo) {
+      oldWidget.valueNotifier.removeListener(_animateTransition);
+      widget.valueNotifier.addListener(_animateTransition);
       _updateValues();
     }
   }
@@ -89,20 +96,21 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
 
   String _getValue() {
     return _handleSpecialCase(
-            num.parse(widget._valueNotifier.value) % widget._modulo)
+            num.parse(widget.valueNotifier.value) % widget.modulo)
         .toString()
         .padLeft(2, '0');
   }
 
   String _getNextValue() {
     return _handleSpecialCase(
-            (num.parse(widget._valueNotifier.value) + 1) % widget._modulo)
+            (num.parse(widget.valueNotifier.value) + 1) % widget.modulo)
         .toString()
         .padLeft(2, '0');
   }
 
+  // Handles special case since zero does not exist when using AM/PM
   num _handleSpecialCase(num value) {
-    return (value == 0 && widget._modulo == 12) ? 12 : value;
+    return (value == 0 && widget.modulo == 12) ? 12 : value;
   }
 
   @override
@@ -193,13 +201,13 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
         border: cardPosition == CardPosition.top
             ? Border(
                 bottom: BorderSide(
-                  width: _dividerHeight / 2.0,
+                  width: widget.dividerHeight / 2.0,
                   color: ClockTheme.of(context).backgroundColor,
                 ),
               )
             : Border(
                 top: BorderSide(
-                  width: _dividerHeight / 2.0,
+                  width: widget.dividerHeight / 2.0,
                   color: ClockTheme.of(context).backgroundColor,
                 ),
               ),

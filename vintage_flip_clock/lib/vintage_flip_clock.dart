@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_clock_helper/model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/am_pm_widget.dart';
 import 'package:vintage_flip_clock/clock_cards.dart';
@@ -11,14 +12,6 @@ import 'package:vintage_flip_clock/weekday_spinner.dart';
 import 'package:vintage_flip_clock/enums.dart';
 import 'package:vintage_flip_clock/temp_scale.dart';
 import 'package:vintage_flip_clock/weather_spinner.dart';
-
-enum _Element {
-  background,
-}
-
-final _Theme = {
-  _Element.background: Color(0xFF202020),
-};
 
 class VintageFlipClock extends StatefulWidget {
   const VintageFlipClock(this.model);
@@ -36,6 +29,8 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   ValueNotifier<bool> _is24HourFormatNotifier;
   ValueNotifier<HourMode> _hourModeNotifier;
   ValueNotifier<Weekday> _weekdayNotifier;
+  ValueNotifier<String> _hourNotifier;
+  ValueNotifier<String> _minuteNotifier;
   Timer _timer;
 
   @override
@@ -46,15 +41,17 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       DeviceOrientation.landscapeLeft,
     ]);
     _temperatureNotifier = ValueNotifier<num>(widget.model.temperature);
-    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
-//    _dateTimeNotifier =
-//        ValueNotifier<DateTime>(DateTime.parse("2019-12-21 23:57:00Z"));
+//    _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
+    _dateTimeNotifier =
+        ValueNotifier<DateTime>(DateTime.parse("2019-12-22 23:55:00Z"));
     _weatherConditionNotifier =
         ValueNotifier<WeatherCondition>(widget.model.weatherCondition);
     _is24HourFormatNotifier = ValueNotifier<bool>(widget.model.is24HourFormat);
 
     _hourModeNotifier = ValueNotifier<HourMode>(_getHourMode());
     _weekdayNotifier = ValueNotifier<Weekday>(_getWeekDay());
+    _hourNotifier = ValueNotifier<String>(_getHours());
+    _minuteNotifier = ValueNotifier<String>(_getMinutes());
 
     widget.model.addListener(_updateModel);
     _updateTime();
@@ -86,28 +83,29 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   }
 
   void _updateTime() {
-    _dateTimeNotifier.value = DateTime.now();
-    _timer = Timer(
-      Duration(minutes: 1) -
-          Duration(seconds: _dateTimeNotifier.value.second) -
-          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
-      _updateTime,
-    );
-
-    // Debug timer
-//    _dateTimeNotifier.value = _dateTimeNotifier.value.add(
-//      Duration(minutes: 1),
-//    );
+//    _dateTimeNotifier.value = DateTime.now();
 //    _timer = Timer(
-//      Duration(seconds: 3),
+//      Duration(minutes: 1) -
+//          Duration(seconds: _dateTimeNotifier.value.second) -
+//          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
 //      _updateTime,
 //    );
+
+    // Debug timer
+    _dateTimeNotifier.value = _dateTimeNotifier.value.add(
+      Duration(minutes: 1),
+    );
+    _timer = Timer(
+      Duration(seconds: 3),
+      _updateTime,
+    );
 
     if (!_is24HourFormatNotifier.value) {
       _hourModeNotifier.value = _getHourMode();
     }
-
     _weekdayNotifier.value = _getWeekDay();
+    _hourNotifier.value = _getHours();
+    _minuteNotifier.value = _getMinutes();
   }
 
   HourMode _getHourMode() {
@@ -118,15 +116,24 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
     return Weekday.values[_dateTimeNotifier.value.weekday - 1];
   }
 
+  String _getHours() {
+    return DateFormat('HH').format(_dateTimeNotifier.value);
+  }
+
+  String _getMinutes() {
+    return DateFormat('mm').format(_dateTimeNotifier.value);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClockProvider(
-      dateTimeNotifier: _dateTimeNotifier,
       is24HourFormatNotifier: _is24HourFormatNotifier,
       hourModeNotifier: _hourModeNotifier,
       temperatureNotifier: _temperatureNotifier,
       weatherConditionNotifier: _weatherConditionNotifier,
       weekdayNotifier: _weekdayNotifier,
+      hourNotifier: _hourNotifier,
+      minuteNotifier: _minuteNotifier,
       child: Container(
         color: ClockTheme.of(context).backgroundColor,
         padding: EdgeInsets.all(20.0),
@@ -158,7 +165,8 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                                   builder: (BuildContext context,
                                       BoxConstraints constraints) {
                                     return WeekdaySpinner(
-                                        constraints.biggest.height);
+                                      itemSize: constraints.biggest.height,
+                                    );
                                   },
                                 ),
                               ),
@@ -191,8 +199,9 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                                                             BoxConstraints
                                                                 constraints) {
                                                       return AmPmWidget(
-                                                          constraints
-                                                              .biggest.width);
+                                                        iconSize: constraints
+                                                            .biggest.width,
+                                                      );
                                                     },
                                                   ),
                                                 ),
@@ -230,7 +239,10 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
                       child: LayoutBuilder(
                         builder:
                             (BuildContext context, BoxConstraints constraints) {
-                          return WeatherSpinner(constraints.biggest.height);
+                          return WeatherSpinner(
+                            height: constraints.biggest.height,
+                            numVisibleIcons: 7,
+                          );
                         },
                       ),
                     ),

@@ -7,9 +7,10 @@ import 'package:vintage_flip_clock/clock_theme.dart';
 import 'package:vintage_flip_clock/clock_provider.dart';
 
 class WeatherSpinner extends StatefulWidget {
-  const WeatherSpinner(this.spinnerHeight);
+  const WeatherSpinner({@required this.height, @required this.numVisibleIcons});
 
-  final double spinnerHeight;
+  final double height;
+  final num numVisibleIcons;
 
   @override
   _WeatherSpinnerState createState() => _WeatherSpinnerState();
@@ -20,7 +21,6 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
   ScrollController _scrollController;
   WeatherCondition _currentWeatherCondition;
   double _iconSize;
-  final _numVisibleIcons = 7;
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
         .weatherConditionNotifier;
     _weatherConditionNotifier.addListener(_scrollToIcon);
 
-    _iconSize = widget.spinnerHeight / _numVisibleIcons;
+    _iconSize = widget.height / widget.numVisibleIcons;
 
     _currentWeatherCondition = _weatherConditionNotifier.value;
     _scrollController = ScrollController(
@@ -41,6 +41,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
 
   @override
   void dispose() {
+    _weatherConditionNotifier.removeListener(_scrollToIcon);
     _scrollController.dispose();
     super.dispose();
   }
@@ -70,7 +71,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
 
   double _getScrollOffsetOfWeatherCondition(WeatherCondition weatherCondition) {
     final index = _getIndexOfWeatherCondition(weatherCondition);
-    return (index - (_numVisibleIcons - 1) / 2) * _iconSize;
+    return (index - (widget.numVisibleIcons - 1) / 2) * _iconSize;
   }
 
   final _icons = [
@@ -158,7 +159,8 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
     );
   }
 
-  Widget buildIconContainer(BuildContext context, IconData iconData, double size) {
+  Widget buildIconContainer(
+      BuildContext context, IconData iconData, double size) {
     return Container(
       color: ClockTheme.of(context).cardColor,
       height: size,
