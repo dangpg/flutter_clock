@@ -253,7 +253,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
               flex: 5,
               child: _buildModuleBorder(
                 context: context,
-                innerPadding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
+                innerPadding: const EdgeInsets.fromLTRB(8.0, 4.0, 8.0, 0.0),
                 child: TempScale(),
               ),
             ),
@@ -272,6 +272,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
             'DASHTIME',
             style: ClockTheme.of(context).textTheme.title,
           ),
+          Spacer(),
           FittedBox(
             fit: BoxFit.fitWidth,
             child: Text(
@@ -299,7 +300,7 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
           color: ClockTheme.of(context).dividerColor,
           width: 2.5,
         ),
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(7.5),
       ),
       child: Container(
         decoration: BoxDecoration(

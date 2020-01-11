@@ -245,11 +245,15 @@ class _FlipCardState extends State<FlipCard> with TickerProviderStateMixin {
                       children: <Widget>[
                         Text(
                           value.substring(0, 1),
-                          style: widget.modulo == 60 ? ClockTheme.of(context).textTheme.display3 : ClockTheme.of(context).textTheme.display1,
+                          style: widget.modulo == 60
+                              ? ClockTheme.of(context).textTheme.display3
+                              : ClockTheme.of(context).textTheme.display1,
                         ),
                         Text(
                           value.substring(1, 2),
-                          style: widget.modulo == 60 ? ClockTheme.of(context).textTheme.display4 : ClockTheme.of(context).textTheme.display2,
+                          style: widget.modulo == 60
+                              ? ClockTheme.of(context).textTheme.display4
+                              : ClockTheme.of(context).textTheme.display2,
                         ),
                       ],
                     );

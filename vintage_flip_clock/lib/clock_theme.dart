@@ -25,9 +25,12 @@ class ClockTheme {
       title: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
       subtitle: TextStyle(color: Colors.grey[800]),
       headline: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-      subhead: TextStyle(color: Colors.grey[800]),
-      body1: TextStyle(color: Color(0xFF0F9D58), fontWeight: FontWeight.bold), // Weekday Widget
-      body2: TextStyle(color: Color(0xFF4285F4), fontWeight: FontWeight.bold), // AMPM Widget
+      subhead: TextStyle(color: Colors.grey[800], letterSpacing: 1.5),
+      body1: TextStyle(
+          color: Color(0xFF0F9D58),
+          fontWeight: FontWeight.bold), // Weekday Widget
+      body2: TextStyle(
+          color: Color(0xFF4285F4), fontWeight: FontWeight.bold), // AMPM Widget
       display1: TextStyle(color: Color(0xFF4285F4)),
       display2: TextStyle(color: Color(0xFFDB4437)),
       display3: TextStyle(color: Color(0xFFF4B400)),
@@ -52,10 +55,12 @@ class ClockTheme {
     textTheme: TextTheme(
       title: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       subtitle: TextStyle(color: Colors.white, fontSize: 10.0),
-      headline: TextStyle(color: Colors.white),
-      subhead: TextStyle(color: Colors.white),
-      body1: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // Weekday Widget
-      body2: TextStyle(color: Colors.white, fontWeight: FontWeight.bold), // AMPM Widget
+      headline: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      subhead: TextStyle(color: Colors.white, letterSpacing: 1.5),
+      body1: TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold), // Weekday Widget
+      body2: TextStyle(
+          color: Colors.white, fontWeight: FontWeight.bold), // AMPM Widget
       display1: TextStyle(color: Colors.white),
       display2: TextStyle(color: Colors.white),
       display3: TextStyle(color: Colors.white),

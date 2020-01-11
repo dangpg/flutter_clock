@@ -134,6 +134,7 @@ class _WeatherSpinnerState extends State<WeatherSpinner> {
               border: Border.all(
                 color: ClockTheme.of(context).cardColor,
               ),
+              color: ClockTheme.of(context).cardColor,
             ),
             child: ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

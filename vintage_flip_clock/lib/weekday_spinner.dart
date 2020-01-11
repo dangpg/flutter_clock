@@ -82,9 +82,7 @@ class _WeekdaySpinnerState extends State<WeekdaySpinner> {
           child: Text(
             Util.enumToString(Weekday.values[index].toString()),
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: colors[index % 4]
-            ),
+                fontWeight: FontWeight.bold, color: colors[index % 4]),
           ),
         );
       },

@@ -64,7 +64,7 @@ class TempScale extends StatelessWidget {
                 ),
               ),
               Spacer(
-                flex: 3,
+                flex: 2,
               )
             ],
           ),
@@ -103,13 +103,13 @@ class TempScale extends StatelessWidget {
                             ),
                           ),
                           Expanded(
-                            flex: 3,
+                            flex: 2,
                             child: Padding(
                               padding:
-                              const EdgeInsets.symmetric(vertical: 8.0),
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceAround,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
                                   for (var j = 0; j < 5; j++)
@@ -140,7 +140,7 @@ class TempScale extends StatelessWidget {
                   builder: (BuildContext context, BoxConstraints constraints) {
                     return ValueListenableBuilder(
                       valueListenable:
-                      ClockProvider.of(context).temperatureNotifier,
+                          ClockProvider.of(context).temperatureNotifier,
                       builder: (BuildContext context, num value, Widget child) {
                         return AnimatedPadding(
                           padding: EdgeInsets.only(
