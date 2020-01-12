@@ -2,8 +2,6 @@
 
 Submission for the Flutter Clock Challenge. See [flutter.dev/clock](https://flutter.dev/clock) for how to get started, submission requirements, contest rules, and FAQs.
 
-Visit https://dangpg.github.io/flutter_clock for a live demo of the clock powered by Flutter for Web!
-
 The inspiration for this design came from vintage alarm clocks that most often came with a radio module equipped. Since the submission guideline explicitly stated that the clock design should not feature any audio functionality, I decided to use frequency selector to display information about the current temperature.
 
 A list of features this clock design offers:
