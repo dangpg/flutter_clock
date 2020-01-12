@@ -41,8 +41,6 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
       DeviceOrientation.landscapeLeft,
     ]);
     _dateTimeNotifier = ValueNotifier<DateTime>(DateTime.now());
-    _dateTimeNotifier =
-        ValueNotifier<DateTime>(DateTime.parse("2019-12-22 23:55:00Z"));
     _temperatureNotifier = ValueNotifier<num>(widget.model.temperature);
     _weatherConditionNotifier =
         ValueNotifier<WeatherCondition>(widget.model.weatherCondition);
@@ -83,20 +81,11 @@ class _VintageFlipClockState extends State<VintageFlipClock> {
   }
 
   void _updateTime() {
-//    _dateTimeNotifier.value = DateTime.now();
-//    _timer = Timer(
-//      Duration(minutes: 1) -
-//          Duration(seconds: _dateTimeNotifier.value.second) -
-//          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
-//      _updateTime,
-//    );
-
-    // Debug timer
-    _dateTimeNotifier.value = _dateTimeNotifier.value.add(
-      Duration(minutes: 1),
-    );
+    _dateTimeNotifier.value = DateTime.now();
     _timer = Timer(
-      Duration(seconds: 3),
+      Duration(minutes: 1) -
+          Duration(seconds: _dateTimeNotifier.value.second) -
+          Duration(milliseconds: _dateTimeNotifier.value.millisecond),
       _updateTime,
     );
 
